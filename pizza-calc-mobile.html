@@ -1,0 +1,2503 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Pizza PRO">
+<meta name="application-name" content="Pizza PRO">
+<meta name="theme-color" content="#f97316">
+<meta name="mobile-web-app-capable" content="yes">
+<title>🍕 Pizza PRO</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0e0c;
+    --surface: #1a1915;
+    --surface2: #222119;
+    --border: #2e2c26;
+    --orange: #f97316;
+    --amber: #fbbf24;
+    --text: #f5f0e8;
+    --muted: #7a7568;
+    --mono: 'DM Mono', monospace;
+    --serif: 'Fraunces', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--serif);
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  /* === HEADER === */
+  .header {
+    background: linear-gradient(180deg, #1a1915 0%, transparent 100%);
+    padding: 16px 20px 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-title {
+    font-size: 22px;
+    font-weight: 900;
+    font-style: italic;
+    color: var(--text);
+    letter-spacing: -0.5px;
+  }
+
+  .header-title span { color: var(--orange); }
+
+  .header-icons { display: flex; gap: 8px; }
+
+  .icon-btn {
+    width: 36px; height: 36px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--muted);
+    font-size: 15px;
+    transition: all 0.15s;
+  }
+  .icon-btn:active { transform: scale(0.9); background: var(--border); }
+  .icon-btn.ai-btn {
+    background: linear-gradient(135deg, var(--orange), var(--amber));
+    color: white; border-color: transparent;
+    box-shadow: 0 0 20px rgba(249,115,22,0.35);
+  }
+
+  /* === TABS === */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    padding: 12px 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    transition: all 0.2s;
+    white-space: nowrap;
+    font-family: var(--mono);
+  }
+
+  .tab.active {
+    background: var(--orange);
+    color: white;
+    border-color: var(--orange);
+    box-shadow: 0 4px 12px rgba(249,115,22,0.3);
+  }
+
+  /* === CONTENT === */
+  .content {
+    padding: 16px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* === CARD === */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+
+  .card-title {
+    font-size: 11px;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-title::before {
+    content: '';
+    width: 3px; height: 12px;
+    background: var(--orange);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* === SEGMENT === */
+  .segment {
+    display: flex;
+    gap: 3px;
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 3px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+  }
+
+  .seg-btn {
+    flex: 1;
+    padding: 9px 4px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.2s;
+    font-family: var(--mono);
+    background: transparent;
+    border: none;
+  }
+
+  .seg-btn.active {
+    background: var(--surface2);
+    color: var(--orange);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  /* === INPUTS === */
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+
+  .field label {
+    display: block;
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--muted);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .field input[type="number"],
+  .field select,
+  .field input[type="time"] {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: var(--mono);
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: border-color 0.2s;
+  }
+
+  .field input:focus, .field select:focus {
+    border-color: var(--orange);
+  }
+
+  .field select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%237a7568'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; background-size: 18px; padding-right: 34px; }
+
+  /* === RANGE === */
+  .range-row { margin-bottom: 14px; }
+  .range-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+  .range-label { font-size: 13px; color: var(--text); font-weight: 500; }
+  .range-val { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--orange); }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 4px;
+    background: var(--border);
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--orange);
+    box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--orange);
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+
+  input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.3); }
+
+  /* === RECIPE CARD === */
+  .recipe-card {
+    background: linear-gradient(135deg, #1a1410 0%, #1a1812 100%);
+    border: 1px solid #3a2e1a;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+
+  .recipe-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #2e2416;
+  }
+
+  .recipe-title {
+    font-size: 26px;
+    font-weight: 900;
+    font-style: italic;
+    color: var(--orange);
+  }
+
+  .recipe-meta {
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .recipe-meta strong { color: var(--amber); }
+
+  .ingredient-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .ingr {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .ingr-icon {
+    width: 32px; height: 32px;
+    background: rgba(249,115,22,0.12);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .ingr-label { font-size: 10px; font-family: var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+  .ingr-val { font-size: 17px; font-weight: 700; font-family: var(--mono); color: var(--text); line-height: 1.1; }
+  .ingr-unit { font-size: 11px; color: var(--muted); }
+
+  /* Prefermento */
+  .pref-block {
+    background: rgba(249,115,22,0.07);
+    border: 1px solid rgba(249,115,22,0.2);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .pref-title {
+    font-size: 11px;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--orange);
+    margin-bottom: 10px;
+  }
+  .pref-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .pref-item { text-align: center; background: rgba(0,0,0,0.25); border-radius: 8px; padding: 8px 6px; }
+  .pref-item-label { font-size: 9px; font-family: var(--mono); color: var(--muted); text-transform: uppercase; }
+  .pref-item-val { font-size: 14px; font-weight: 700; font-family: var(--mono); color: var(--text); }
+
+  /* === TIMELINE === */
+  .timeline-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+
+  .timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .timeline-title {
+    font-size: 16px;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--text);
+  }
+
+  .timeline-time-input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--orange);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: var(--mono);
+    outline: none;
+    width: 110px;
+    text-align: center;
+  }
+
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 6px; bottom: 6px;
+    width: 2px;
+    background: linear-gradient(180deg, var(--orange), var(--border));
+    border-radius: 2px;
+  }
+
+  .tl-step {
+    position: relative;
+    margin-bottom: 18px;
+    animation: fadeIn 0.3s ease both;
+  }
+  .tl-step:last-child { margin-bottom: 0; }
+
+  .tl-dot {
+    position: absolute;
+    left: -24px; top: 4px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--orange);
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 2px var(--orange);
+  }
+  .tl-step:last-child .tl-dot { background: var(--amber); box-shadow: 0 0 0 2px var(--amber); }
+
+  .tl-time { font-family: var(--mono); font-size: 16px; font-weight: 700; color: var(--text); }
+  .tl-label { font-size: 13px; color: var(--orange); font-weight: 600; }
+  .tl-desc { font-size: 11px; font-family: var(--mono); color: var(--muted); margin-top: 1px; }
+
+  .tl-footer {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .tl-footer span { color: var(--amber); font-weight: 700; }
+
+  .error-box {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 12px;
+    padding: 14px;
+    color: #f87171;
+    font-size: 13px;
+    font-family: var(--mono);
+  }
+
+  /* === MODAL === */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 200;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px 24px 0 0;
+    padding: 8px 20px 40px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 90dvh;
+    overflow-y: auto;
+    animation: slideUp 0.3s cubic-bezier(.17,.67,.35,1.0) both;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .modal-handle {
+    width: 40px; height: 4px;
+    background: var(--border);
+    border-radius: 4px;
+    margin: 8px auto 20px;
+  }
+
+  .modal-title {
+    font-size: 20px;
+    font-weight: 900;
+    font-style: italic;
+    margin-bottom: 16px;
+  }
+
+  .modal-title .ot { color: var(--orange); }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 20px;
+    width: 32px; height: 32px;
+    background: var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px; color: var(--muted);
+    border: none;
+  }
+  .modal-close:active { background: var(--surface2); }
+
+  /* FAQ */
+  .faq-item {
+    padding: 14px;
+    background: var(--bg);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border-left: 3px solid var(--orange);
+  }
+  .faq-q { font-size: 13px; font-weight: 700; color: var(--orange); margin-bottom: 6px; }
+  .faq-a { font-size: 12px; font-family: var(--mono); color: var(--muted); line-height: 1.6; }
+
+  /* AI */
+  .ai-btn-big {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    color: var(--text);
+    font-family: var(--serif);
+    font-size: 14px;
+    font-weight: 700;
+    transition: all 0.2s;
+    text-align: left;
+  }
+  .ai-btn-big:active { transform: scale(0.98); border-color: var(--orange); }
+  .ai-btn-big .ai-ico { font-size: 22px; width: 40px; height: 40px; background: rgba(249,115,22,0.12); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+  .ai-response {
+    background: var(--bg);
+    border: 1px solid #3a2e1a;
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 13px;
+    font-family: var(--mono);
+    line-height: 1.7;
+    color: var(--text);
+    white-space: pre-wrap;
+    margin-bottom: 12px;
+  }
+
+  .ai-back {
+    width: 100%;
+    padding: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .loading-pulse {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 30px;
+    color: var(--orange);
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+
+  .pulse-dots span {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--orange);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  .pulse-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .pulse-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes pulse {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+
+  /* === GUIDE === */
+  .guide-block {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .guide-title { font-size: 13px; font-weight: 700; color: var(--amber); margin-bottom: 6px; }
+  .guide-text { font-size: 12px; font-family: var(--mono); color: var(--muted); line-height: 1.6; }
+
+  /* Math */
+  code {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px 6px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--amber);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hidden { display: none; }
+
+  /* === FARINE === */
+  .farine-filter {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .filter-btn {
+    padding: 6px 13px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    font-size: 12px;
+    font-family: var(--mono);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .filter-btn.active {
+    background: var(--orange);
+    color: white;
+    border-color: var(--orange);
+  }
+  .filter-btn:active { transform: scale(0.95); }
+
+  .flour-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .flour-card[data-cat="grano-tenero"] { border-left: 3px solid #f97316; }
+  .flour-card[data-cat="grano-duro"]   { border-left: 3px solid #eab308; }
+  .flour-card[data-cat="integrale"]    { border-left: 3px solid #84cc16; }
+  .flour-card[data-cat="speciale"]     { border-left: 3px solid #a78bfa; }
+  .flour-card[data-cat="alternativa"]  { border-left: 3px solid #22d3ee; }
+
+  .flour-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+  }
+
+  .flour-emoji {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  [data-cat="grano-tenero"] .flour-emoji { background: rgba(249,115,22,0.12); }
+  [data-cat="grano-duro"]   .flour-emoji { background: rgba(234,179,8,0.12); }
+  [data-cat="integrale"]    .flour-emoji { background: rgba(132,204,22,0.12); }
+  [data-cat="speciale"]     .flour-emoji { background: rgba(167,139,250,0.12); }
+  [data-cat="alternativa"]  .flour-emoji { background: rgba(34,211,238,0.12); }
+
+  .flour-name { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .flour-tag  {
+    display: inline-block;
+    font-size: 10px; font-family: var(--mono);
+    padding: 2px 7px; border-radius: 20px;
+    font-weight: 600;
+    background: rgba(249,115,22,0.15); color: var(--orange);
+  }
+  [data-cat="grano-duro"]  .flour-tag { background: rgba(234,179,8,0.15);   color: #eab308; }
+  [data-cat="integrale"]   .flour-tag { background: rgba(132,204,22,0.15);  color: #84cc16; }
+  [data-cat="speciale"]    .flour-tag { background: rgba(167,139,250,0.15); color: #a78bfa; }
+  [data-cat="alternativa"] .flour-tag { background: rgba(34,211,238,0.15);  color: #22d3ee; }
+
+  .flour-arrow {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--muted);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  .flour-card.open .flour-arrow { transform: rotate(180deg); }
+
+  .flour-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+  .flour-card.open .flour-body { max-height: 600px; }
+
+  .flour-inner {
+    padding: 0 16px 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .flour-desc {
+    font-size: 13px;
+    font-family: var(--mono);
+    color: var(--muted);
+    line-height: 1.65;
+    margin: 12px 0 14px;
+  }
+
+  .flour-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .fstat {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 10px 8px;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+  .fstat-label { font-size: 9px; font-family: var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+  .fstat-val   { font-size: 14px; font-weight: 700; font-family: var(--mono); color: var(--text); }
+
+  .flour-uses {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .flour-use-tag {
+    font-size: 11px;
+    font-family: var(--mono);
+    padding: 4px 9px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  /* === HISTORY === */
+  .history-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+  .history-empty .he-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+
+  .history-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .history-item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    position: relative;
+  }
+  .history-item:active { border-color: var(--orange); }
+
+  .hi-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .hi-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 8px;
+  }
+  .hi-date {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .hi-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 8px;
+  }
+  .hi-tag {
+    font-size: 10px;
+    font-family: var(--mono);
+    padding: 3px 8px;
+    border-radius: 20px;
+    background: rgba(249,115,22,0.1);
+    color: var(--orange);
+    border: 1px solid rgba(249,115,22,0.2);
+  }
+
+  .hi-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .hi-btn {
+    flex: 1;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 12px;
+    font-family: var(--mono);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .hi-btn:active { transform: scale(0.96); }
+  .hi-btn.load { background: rgba(249,115,22,0.12); color: var(--orange); border-color: rgba(249,115,22,0.3); }
+  .hi-btn.del  { background: rgba(239,68,68,0.08); color: #f87171; border-color: rgba(239,68,68,0.2); }
+
+  .history-save-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .history-save-bar input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: var(--mono);
+    outline: none;
+  }
+  .history-save-bar input:focus { border-color: var(--orange); }
+  .history-save-bar button {
+    background: var(--orange);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: var(--mono);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform 0.1s;
+  }
+  .history-save-bar button:active { transform: scale(0.95); }
+
+  .history-count {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .history-count span { color: var(--orange); font-weight: 700; }
+
+  /* === SETTINGS === */
+  .setting-section-title {
+    font-size: 11px;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    margin: 18px 0 10px;
+  }
+  .setting-section-title:first-child { margin-top: 0; }
+
+  .rounding-options { display: flex; flex-direction: column; gap: 8px; }
+
+  .rounding-opt {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .rounding-opt.selected {
+    border-color: var(--orange);
+    background: rgba(249,115,22,0.06);
+  }
+  .rounding-opt:active { transform: scale(0.98); }
+
+  .ropt-radio {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 2px solid var(--border); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .rounding-opt.selected .ropt-radio { border-color: var(--orange); background: var(--orange); }
+  .rounding-opt.selected .ropt-radio::after { content:''; width:7px; height:7px; border-radius:50%; background:white; display:block; }
+
+  .ropt-icon { font-size: 20px; flex-shrink: 0; }
+  .ropt-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .ropt-sub { font-size: 11px; font-family: var(--mono); color: var(--muted); line-height: 1.4; }
+  .ropt-example { margin-left: auto; flex-shrink: 0; text-align: right; }
+  .ropt-ex-label { font-size: 9px; font-family: var(--mono); color: var(--muted); text-transform: uppercase; }
+  .ropt-ex-val { font-size: 15px; font-weight: 700; font-family: var(--mono); color: var(--amber); }
+
+  .install-banner {
+    position: fixed;
+    bottom: 20px;
+    left: 16px; right: 16px;
+    background: linear-gradient(135deg, #1e1c17, #252318);
+    border: 1px solid #3a3420;
+    border-radius: 18px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(249,115,22,0.15);
+    z-index: 150;
+    animation: bannerUp 0.4s cubic-bezier(.17,.67,.35,1.1) both;
+    max-width: 448px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @keyframes bannerUp {
+    from { transform: translateY(120%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .install-banner.hiding {
+    animation: bannerDown 0.3s ease forwards;
+  }
+
+  @keyframes bannerDown {
+    to { transform: translateY(140%); opacity: 0; }
+  }
+
+  .install-icon {
+    width: 46px; height: 46px;
+    background: linear-gradient(135deg, var(--orange), var(--amber));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(249,115,22,0.35);
+  }
+
+  .install-text { flex: 1; min-width: 0; }
+  .install-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .install-sub { font-size: 11px; font-family: var(--mono); color: var(--muted); }
+
+  .install-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+
+  .btn-install {
+    background: linear-gradient(135deg, var(--orange), var(--amber));
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: var(--mono);
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 3px 12px rgba(249,115,22,0.3);
+    transition: transform 0.1s;
+  }
+  .btn-install:active { transform: scale(0.95); }
+
+  .btn-dismiss {
+    background: transparent;
+    color: var(--muted);
+    border: none;
+    font-size: 11px;
+    font-family: var(--mono);
+    cursor: pointer;
+    text-align: center;
+    padding: 2px;
+  }
+
+  /* iOS Instructions Modal */
+  .ios-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 300;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .ios-modal.open { display: flex; }
+
+  .ios-sheet {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px 24px 0 0;
+    padding: 8px 24px 48px;
+    width: 100%;
+    max-width: 480px;
+    animation: slideUp 0.35s cubic-bezier(.17,.67,.35,1.0) both;
+  }
+
+  .ios-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .ios-step:last-child { border-bottom: none; }
+
+  .ios-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(249,115,22,0.15);
+    border: 1px solid rgba(249,115,22,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 13px; font-weight: 700;
+    color: var(--orange);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .ios-step-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .ios-step-sub { font-size: 12px; font-family: var(--mono); color: var(--muted); line-height: 1.5; }
+
+  .ios-arrow {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 28px;
+    animation: bounce 1.5s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-title">Pizza <span>PRO</span> 🍕</div>
+  <div class="header-icons">
+    <button class="icon-btn" onclick="openModal('settingsModal')" title="Impostazioni">⚙</button>
+    <button class="icon-btn" onclick="openHistoryModal()" title="Cronologia">🕐</button>
+    <button class="icon-btn" onclick="openModal('piegheModal')" title="Pieghe">≋</button>
+    <button class="icon-btn" onclick="openModal('faqModal')" title="FAQ">?</button>
+    <button class="icon-btn ai-btn" onclick="openModal('aiModal'); resetAI()" title="Chef AI">✦</button>
+    <button class="icon-btn" onclick="openModal('mathModal')" title="Formule">∑</button>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="setTab('formato')">📐 Resa</button>
+  <button class="tab" onclick="setTab('impasto')">🧪 Impasto</button>
+  <button class="tab" onclick="setTab('lievito')">🦠 Lievito</button>
+  <button class="tab" onclick="setTab('tempi')">⏱ Tempi</button>
+  <button class="tab" onclick="setTab('ricetta')">📋 Ricetta</button>
+  <button class="tab" onclick="setTab('farine')">🌾 Farine</button>
+</div>
+
+<div class="content">
+
+  <!-- TAB: RESA & FORMATO -->
+  <div class="panel active" id="tab-formato">
+    <div class="card">
+      <div class="card-title">Formato</div>
+      <div class="segment">
+        <button class="seg-btn active" id="seg-tonda" onclick="setFormato('tonda')">Tonda</button>
+        <button class="seg-btn" id="seg-teglia" onclick="setFormato('teglia')">Teglia</button>
+      </div>
+
+      <div id="tonda-fields">
+        <div class="row2">
+          <div class="field"><label>N° Pizze</label><input type="number" id="numeroPezzi" value="4" min="1" oninput="calc()"></div>
+          <div class="field"><label>Peso (g)</label><input type="number" id="pesoPanetto" value="250" min="50" step="10" oninput="calc()"></div>
+        </div>
+      </div>
+
+      <div id="teglia-fields" class="hidden">
+        <div class="row2">
+          <div class="field"><label>N° Teglie</label><input type="number" id="numeroPezziT" value="1" min="1" oninput="calc()"></div>
+          <div class="field"><label>Spessore</label>
+            <select id="spessoreTeglia" onchange="calc()">
+              <option value="0.4">Sottile</option>
+              <option value="0.5" selected>Classica</option>
+              <option value="0.6">Focaccia</option>
+            </select>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field"><label>Forma</label>
+            <select id="tipoTeglia" onchange="toggleTeglia(); calc()">
+              <option value="rettangolare">Rettangolare</option>
+              <option value="rotonda">Rotonda</option>
+            </select>
+          </div>
+          <div id="rect-fields" class="field">
+            <label>L × P (cm)</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <input type="number" id="tegliaL" value="40" min="10" oninput="calc()" style="padding:10px 8px">
+              <input type="number" id="tegliaP" value="30" min="10" oninput="calc()" style="padding:10px 8px">
+            </div>
+          </div>
+          <div id="round-fields" class="field hidden"><label>Diam. (cm)</label><input type="number" id="tegliaD" value="30" min="10" oninput="calc()"></div>
+        </div>
+      </div>
+
+      <div class="range-row">
+        <div class="range-header"><span class="range-label">Sfrido / Margine</span><span class="range-val" id="sfridoVal">0%</span></div>
+        <input type="range" id="sfrido" min="0" max="15" step="1" value="0" oninput="document.getElementById('sfridoVal').textContent=this.value+'%'; calc()">
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: IMPASTO BASE -->
+  <div class="panel" id="tab-impasto">
+    <div class="card">
+      <div class="card-title">Ingredienti Base</div>
+      <div class="range-row">
+        <div class="range-header"><span class="range-label">Idratazione</span><span class="range-val" id="idratVal">65%</span></div>
+        <input type="range" id="idratazione" min="50" max="100" step="1" value="65" oninput="document.getElementById('idratVal').textContent=this.value+'%'; calc()">
+      </div>
+      <div class="range-row">
+        <div class="range-header"><span class="range-label">Sale</span><span class="range-val" id="saleVal">3.0%</span></div>
+        <input type="range" id="sale" min="0" max="5" step="0.1" value="3.0" oninput="document.getElementById('saleVal').textContent=parseFloat(this.value).toFixed(1)+'%'; calc()">
+      </div>
+      <div class="range-row">
+        <div class="range-header"><span class="range-label">Olio / Grassi</span><span class="range-val" id="olioVal">0%</span></div>
+        <input type="range" id="olio" min="0" max="10" step="0.1" value="0" oninput="document.getElementById('olioVal').textContent=parseFloat(this.value).toFixed(1)+'%'; calc()">
+      </div>
+      <div class="range-row">
+        <div class="range-header"><span class="range-label">Zucchero / Malto</span><span class="range-val" id="zuccheroVal">0%</span></div>
+        <input type="range" id="zucchero" min="0" max="10" step="0.1" value="0" oninput="document.getElementById('zuccheroVal').textContent=parseFloat(this.value).toFixed(1)+'%'; calc()">
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: LIEVITO & METODO -->
+  <div class="panel" id="tab-lievito">
+    <div class="card">
+      <div class="card-title">Tipo di Lievito</div>
+      <div class="field" style="margin-bottom:16px">
+        <select id="tipoLievito" onchange="toggleLievito(); calc()">
+          <option value="lbf">Lievito Birra Fresco (LBF)</option>
+          <option value="lbs">Lievito Birra Secco (LBS)</option>
+          <option value="licoli">LiCoLi (Madre Liquido)</option>
+          <option value="solida">Pasta Madre Solida</option>
+        </select>
+      </div>
+
+      <div id="range-lbf" class="range-row">
+        <div class="range-header"><span class="range-label">Quantità LBF</span><span class="range-val" id="lievitoLBFVal">0.20%</span></div>
+        <input type="range" id="lievitoLBF" min="0.05" max="3" step="0.05" value="0.20" oninput="document.getElementById('lievitoLBFVal').textContent=parseFloat(this.value).toFixed(2)+'%'; calc()">
+      </div>
+      <div id="range-lbs" class="range-row hidden">
+        <div class="range-header"><span class="range-label">Quantità LBS</span><span class="range-val" id="lievitoLBSVal">0.07%</span></div>
+        <input type="range" id="lievitoLBS" min="0.01" max="1" step="0.01" value="0.07" oninput="document.getElementById('lievitoLBSVal').textContent=parseFloat(this.value).toFixed(2)+'%'; calc()">
+      </div>
+      <div id="range-madre" class="range-row hidden">
+        <div class="range-header"><span class="range-label">Quantità Madre</span><span class="range-val" id="lievitoMadreVal">15%</span></div>
+        <input type="range" id="lievitoMadre" min="5" max="40" step="1" value="15" oninput="document.getElementById('lievitoMadreVal').textContent=this.value+'%'; calc()">
+      </div>
+    </div>
+
+    <div class="card" id="metodo-card">
+      <div class="card-title">Metodo</div>
+      <div class="segment">
+        <button class="seg-btn active" id="met-diretto" onclick="setMetodo('diretto')">Diretto</button>
+        <button class="seg-btn" id="met-biga" onclick="setMetodo('biga')">Biga</button>
+        <button class="seg-btn" id="met-poolish" onclick="setMetodo('poolish')">Poolish</button>
+      </div>
+      <div id="pref-pct-row" class="range-row hidden">
+        <div class="range-header"><span class="range-label" id="prefLabel">% Biga</span><span class="range-val" id="prefPctVal">30%</span></div>
+        <input type="range" id="percentualePrefermento" min="10" max="100" step="5" value="30" oninput="document.getElementById('prefPctVal').textContent=this.value+'%'; calc()">
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: TEMPI & AMBIENTE -->
+  <div class="panel" id="tab-tempi">
+    <div class="card">
+      <div class="card-title">Ambiente</div>
+      <div class="range-row">
+        <div class="range-header"><span class="range-label">Temp. Ambiente</span><span class="range-val" id="tempVal">20°C</span></div>
+        <input type="range" id="temperatura" min="10" max="35" step="1" value="20" oninput="document.getElementById('tempVal').textContent=this.value+'°C'; calc()">
+      </div>
+      <div class="range-row">
+        <div class="range-header"><span class="range-label">Ore in Frigo</span><span class="range-val" id="frigoVal">0h</span></div>
+        <input type="range" id="oreFrigo" min="0" max="72" step="1" value="0" oninput="document.getElementById('frigoVal').textContent=this.value+'h'; toggleFrigo(); calc()">
+      </div>
+    </div>
+
+    <div class="card hidden" id="frigo-card">
+      <div class="card-title">Opzioni Frigo</div>
+      <div class="range-row">
+        <div class="range-header"><span class="range-label">Temp. Frigo</span><span class="range-val" id="tempFrigoVal">4°C</span></div>
+        <input type="range" id="temperaturaFrigo" min="2" max="10" step="1" value="4" oninput="document.getElementById('tempFrigoVal').textContent=this.value+'°C'; calc()">
+      </div>
+      <div>
+        <div class="card-title" style="margin-bottom:10px">Staglio (Formazione Panetti)</div>
+        <div class="segment">
+          <button class="seg-btn" id="stag-prima" onclick="setStaglio('prima')">Prima del frigo</button>
+          <button class="seg-btn active" id="stag-dopo" onclick="setStaglio('dopo')">Dopo il frigo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: RICETTA -->
+  <div class="panel" id="tab-ricetta">
+    <!-- Recipe card injected by JS -->
+    <div id="recipe-output"></div>
+    <!-- Timeline -->
+    <div class="timeline-card">
+      <div class="timeline-header">
+        <div class="timeline-title">🕐 Cronoprogramma</div>
+        <input type="time" id="oraInfornata" value="20:00" onchange="calc()" class="timeline-time-input">
+      </div>
+      <div id="timeline-output"></div>
+    </div>
+  </div>
+
+  <!-- TAB: FARINE -->
+  <div class="panel" id="tab-farine">
+
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-title">Guida alle Farine</div>
+      <p style="font-size:12px;font-family:var(--mono);color:var(--muted);line-height:1.6;margin-bottom:14px;">
+        La scelta della farina è il primo passo per una buona pizza. La forza <strong style="color:var(--amber)">W</strong> indica la capacità di assorbire acqua e reggere la lievitazione — più è alta, più lunghe possono essere le fermentazioni.
+      </p>
+      <div class="farine-filter">
+        <button class="filter-btn active" onclick="filterFarine('tutte', this)">Tutte</button>
+        <button class="filter-btn" onclick="filterFarine('grano-tenero', this)">Grano Tenero</button>
+        <button class="filter-btn" onclick="filterFarine('grano-duro', this)">Grano Duro</button>
+        <button class="filter-btn" onclick="filterFarine('integrale', this)">Integrale</button>
+        <button class="filter-btn" onclick="filterFarine('speciale', this)">Speciale</button>
+        <button class="filter-btn" onclick="filterFarine('alternativa', this)">Alternativa</button>
+      </div>
+    </div>
+
+    <!-- GRANO TENERO -->
+    <div class="flour-card" data-cat="grano-tenero" onclick="toggleFlour(this)">
+      <div class="flour-header">
+        <div class="flour-emoji">🌾</div>
+        <div><div class="flour-name">Farina 00</div><span class="flour-tag">Grano Tenero</span></div>
+        <div class="flour-arrow">▼</div>
+      </div>
+      <div class="flour-body"><div class="flour-inner">
+        <div class="flour-desc">La più raffinata e diffusa. Bianchissima, quasi priva di crusca. La 00 "standard" (W 150–200) è per prodotti di breve lievitazione; le versioni "rinforzate" (W 280–380) reggono fermentazioni lunghe di 24–72h. Ottima estensibilità, impasto liscio e facile da lavorare.</div>
+        <div class="flour-stats">
+          <div class="fstat"><div class="fstat-label">W tipico</div><div class="fstat-val">150–380</div></div>
+          <div class="fstat"><div class="fstat-label">Proteine</div><div class="fstat-val">9–13%</div></div>
+          <div class="fstat"><div class="fstat-label">Assorbim.</div><div class="fstat-val">55–75%</div></div>
+        </div>
+        <div class="flour-uses">
+          <span class="flour-use-tag">Pizza napoletana</span><span class="flour-use-tag">Pizza tonda</span><span class="flour-use-tag">Focaccia</span><span class="flour-use-tag">Pasta fresca</span>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="flour-card" data-cat="grano-tenero" onclick="toggleFlour(this)">
+      <div class="flour-header">
+        <div class="flour-emoji">🌿</div>
+        <div><div class="flour-name">Farina 0</div><span class="flour-tag">Grano Tenero</span></div>
+        <div class="flour-arrow">▼</div>
+      </div>
+      <div class="flour-body"><div class="flour-inner">
+        <div class="flour-desc">Leggermente meno raffinata della 00, conserva una piccola parte di crusca e germe. Sapore leggermente più presente, struttura simile. Molto usata in passato nei panifici artigianali italiani. Ideale per chi cerca un compromesso tra tecnicità e carattere.</div>
+        <div class="flour-stats">
+          <div class="fstat"><div class="fstat-label">W tipico</div><div class="fstat-val">180–320</div></div>
+          <div class="fstat"><div class="fstat-label">Proteine</div><div class="fstat-val">10–12%</div></div>
+          <div class="fstat"><div class="fstat-label">Assorbim.</div><div class="fstat-val">58–70%</div></div>
+        </div>
+        <div class="flour-uses">
+          <span class="flour-use-tag">Pizza in teglia</span><span class="flour-use-tag">Pane</span><span class="flour-use-tag">Focaccia</span>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="flour-card" data-cat="grano-tenero" onclick="toggleFlour(this)">
+      <div class="flour-header">
+        <div class="flour-emoji">🍞</div>
+        <div><div class="flour-name">Manitoba</div><span class="flour-tag">Grano Tenero</span></div>
+        <div class="flour-arrow">▼</div>
+      </div>
+      <div class="flour-body"><div class="flour-inner">
+        <div class="flour-desc">Farina di forza per eccellenza, prodotta da grani canadesi della provincia di Manitoba. W molto alto, regge maturazioni lunghissime (48–72h+). Spesso usata in blend con farine più deboli per alzarne la forza complessiva. Ottima per impasti ad alta idratazione.</div>
+        <div class="flour-stats">
+          <div class="fstat"><div class="fstat-label">W tipico</div><div class="fstat-val">350–420</div></div>
+          <div class="fstat"><div class="fstat-label">Proteine</div><div class="fstat-val">13–15%</div></div>
+          <div class="fstat"><div class="fstat-label">Assorbim.</div><div class="fstat-val">70–85%</div></div>
+        </div>
+        <div class="flour-uses">
+          <span class="flour-use-tag">Lievitati complessi</span><span class="flour-use-tag">Blend</span><span class="flour-use-tag">Pizza 72h</span><span class="flour-use-tag">Panettone</span>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="flour-card" data-cat="grano-tenero" onclick="toggleFlour(this)">
+      <div class="flour-header">
+        <div class="flour-emoji">🥐</div>
+        <div><div class="flour-name">Farina 1 e Farina 2</div><span class="flour-tag">Grano Tenero</span></div>
+        <div class="flour-arrow">▼</div>
+      </div>
+      <div class="flour-body"><div class="flour-inner">
+        <div class="flour-desc">Farine semi-integrali con contenuto crescente di crusca. La tipo 1 è equilibrata e versatile; la tipo 2 è la più vicina all'integrale. Entrambe aggiungono sapore rustico, fibre e profumo. Richiedono idratazioni più alte (la crusca assorbe molta acqua) e tempi di lievitazione maggiori.</div>
+        <div class="flour-stats">
+          <div class="fstat"><div class="fstat-label">W tipico</div><div class="fstat-val">200–300</div></div>
+          <div class="fstat"><div class="fstat-label">Proteine</div><div class="fstat-val">11–13%</div></div>
+          <div class="fstat"><div class="fstat-label">Assorbim.</div><div class="fstat-val">62–75%</div></div>
+        </div>
+        <div class="flour-uses">
+          <span class="flour-use-tag">Pizza rustica</span><span class="flour-use-tag">Pane artigianale</span><span class="flour-use-tag">Focaccia integrale</span>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- GRANO DURO -->
+    <div class="flour-card" data-cat="grano-duro" onclick="toggleFlour(this)">
+      <div class="flour-header">
+        <div class="flour-emoji">☀️</div>
+        <div><div class="flour-name">Semola Rimacinata</div><span class="flour-tag">Grano Duro</span></div>
+        <div class="flour-arrow">▼</div>
+      </div>
+      <div class="flour-body"><div class="flour-inner">
+        <div class="flour-desc">Ottenuta da grano duro rimacinato più volte fino a granulometria simile alla 00. Colore giallo paglierino naturale, profumo intenso di grano. Il glutine è tenace ma poco estensibile — richiede un po' più di lavorazione. Donaunsa croccantezza unica e una colorazione ambrata alla cottura.</div>
+        <div class="flour-stats">
+          <div class="fstat"><div class="fstat-label">W tipico</div><div class="fstat-val">180–260</div></div>
+          <div class="fstat"><div class="fstat-label">Proteine</div><div class="fstat-val">12–14%</div></div>
+          <div class="fstat"><div class="fstat-label">Assorbim.</div><div class="fstat-val">60–72%</div></div>
+        </div>
+        <div class="flour-uses">
+          <span class="flour-use-tag">Pizza pugliese</span><span class="flour-use-tag">Pane di Altamura</span><span class="flour-use-tag">Pasta secca</span><span class="flour-use-tag">Blend croccante</span>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="flour-card" data-cat="grano-duro" onclick="toggleFlour(this)">
+      <div class="flour-header">
+        <div class="flour-emoji">🌻</div>
+        <div><div class="flour-name">Semola (grossa)</div><span class="flour-tag">Grano Duro</span></div>
+        <div class="flour-arrow">▼</div>
+      </div>
+      <div class="flour-body"><div class="flour-inner">
+        <div class="flour-desc">Granulometria più grossa rispetto alla rimacinata. Non adatta da sola per impasti pizza, ma usata in piccole percentuali (5–15%) per spolvero e crunch sul fondo. Tradizione pugliese e siciliana. Ottima su pala di legno prima di infornare.</div>
+        <div class="flour-stats">
+          <div class="fstat"><div class="fstat-label">Uso pizza</div><div class="fstat-val">Spolvero</div></div>
+          <div class="fstat"><div class="fstat-label">Blend max</div><div class="fstat-val">15%</div></div>
+          <div class="fstat"><div class="fstat-label">Effetto</div><div class="fstat-val">Croccante</div></div>
+        </div>
+        <div class="flour-uses">
+          <span class="flour-use-tag">Spolvero pala</span><span class="flour-use-tag">Blend croccante</span><span class="flour-use-tag">Pasta fresca</span>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- INTEGRALE -->
+    <div class="flour-card" data-cat="integrale" onclick="toggleFlour(this)">
+      <div class="flour-header">
+        <div class="flour-emoji">🌱</div>
+        <div><div class="flour-name">Farina Integrale</div><span class="flour-tag">Integrale</span></div>
+        <div class="flour-arrow">▼</div>
+      </div>
+      <div class="flour-body"><div class="flour-inner">
+        <div class="flour-desc">Conserva tutto il chicco: crusca, germe e endosperma. Ricca di fibre, minerali e sapore. L'impasto risulta più pesante e meno elastico — la crusca taglia le reti glutiniche. Consigliata in blend (30–50%) con farine bianche per mantenere lavorabilità. Richiede idratazioni elevate e lievitazioni lunghe.</div>
+        <div class="flour-stats">
+          <div class="fstat"><div class="fstat-label">W tipico</div><div class="fstat-val">180–250</div></div>
+          <div class="fstat"><div class="fstat-label">Proteine</div><div class="fstat-val">11–14%</div></div>
+          <div class="fstat"><div class="fstat-label">Assorbim.</div><div class="fstat-val">70–80%</div></div>
+        </div>
+        <div class="flour-uses">
+          <span class="flour-use-tag">Pizza integrale</span><span class="flour-use-tag">Pane rustico</span><span class="flour-use-tag">Blend 30–50%</span>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="flour-card" data-cat="integrale" onclick="toggleFlour(this)">
+      <div class="flour-header">
+        <div class="flour-emoji">🌾</div>
+        <div><div class="flour-name">Farro Integrale</div><span class="flour-tag">Integrale</span></div>
+        <div class="flour-arrow">▼</div>
+      </div>
+      <div class="flour-body"><div class="flour-inner">
+        <div class="flour-desc">Cereale antico con glutine più fragile e digeribile rispetto al grano moderno. Sapore dolce e nocciolato. Tre varietà: piccolo (più aromatico), medio e grande (più produttivo). Impasto appiccicoso e delicato — evitare lavorazione eccessiva. Eccellente in blend 20–40%.</div>
+        <div class="flour-stats">
+          <div class="fstat"><div class="fstat-label">W tipico</div><div class="fstat-val">100–180</div></div>
+          <div class="fstat"><div class="fstat-label">Proteine</div><div class="fstat-val">10–15%</div></div>
+          <div class="fstat"><div class="fstat-label">Assorbim.</div><div class="fstat-val">65–75%</div></div>
+        </div>
+        <div class="flour-uses">
+          <span class="flour-use-tag">Pizza artigianale</span><span class="flour-use-tag">Crackers</span><span class="flour-use-tag">Blend 20–40%</span>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- SPECIALE -->
+    <div class="flour-card" data-cat="speciale" onclick="toggleFlour(this)">
+      <div class="flour-header">
+        <div class="flour-emoji">🍕</div>
+        <div><div class="flour-name">Farina per Pizza (blend)</div><span class="flour-tag">Speciale</span></div>
+        <div class="flour-arrow">▼</div>
+      </div>
+      <div class="flour-body"><div class="flour-inner">
+        <div class="flour-desc">Miscele pre-bilanciate create dai mulini appositamente per pizza. Tipicamente 00 + Manitoba + piccole aggiunte di malto o enzimi. Rendono costanti i risultati senza dover fare blend manualmente. Le versioni "Napoletana", "Teglia" o "Croccante" hanno profili diversi di forza e assorbimento.</div>
+        <div class="flour-stats">
+          <div class="fstat"><div class="fstat-label">W tipico</div><div class="fstat-val">260–330</div></div>
+          <div class="fstat"><div class="fstat-label">Proteine</div><div class="fstat-val">11–13%</div></div>
+          <div class="fstat"><div class="fstat-label">Assorbim.</div><div class="fstat-val">60–75%</div></div>
+        </div>
+        <div class="flour-uses">
+          <span class="flour-use-tag">Pizza napoletana</span><span class="flour-use-tag">Pizza teglia</span><span class="flour-use-tag">Uso domestico</span>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="flour-card" data-cat="speciale" onclick="toggleFlour(this)">
+      <div class="flour-header">
+        <div class="flour-emoji">🌀</div>
+        <div><div class="flour-name">Tipo 1 Macinata a Pietra</div><span class="flour-tag">Speciale</span></div>
+        <div class="flour-arrow">▼</div>
+      </div>
+      <div class="flour-body"><div class="flour-inner">
+        <div class="flour-desc">La macinazione a pietra avviene a bassa temperatura preservando oli essenziali, aromi e frazioni del germe. Flavour complesso e profondo, colore crema caldo. Il profilo amidaceo è diverso dalla farina cilindrica — gli impasti maturano meglio a basse temperature e sviluppano aromi straordinari.</div>
+        <div class="flour-stats">
+          <div class="fstat"><div class="fstat-label">W tipico</div><div class="fstat-val">200–280</div></div>
+          <div class="fstat"><div class="fstat-label">Proteine</div><div class="fstat-val">11–13%</div></div>
+          <div class="fstat"><div class="fstat-label">Assorbim.</div><div class="fstat-val">65–75%</div></div>
+        </div>
+        <div class="flour-uses">
+          <span class="flour-use-tag">Pizza artigianale</span><span class="flour-use-tag">Pane di alta gamma</span><span class="flour-use-tag">Freddo lento</span>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- ALTERNATIVA -->
+    <div class="flour-card" data-cat="alternativa" onclick="toggleFlour(this)">
+      <div class="flour-header">
+        <div class="flour-emoji">🌰</div>
+        <div><div class="flour-name">Farina di Grano Saraceno</div><span class="flour-tag">Alternativa</span></div>
+        <div class="flour-arrow">▼</div>
+      </div>
+      <div class="flour-body"><div class="flour-inner">
+        <div class="flour-desc">Pseudocereale naturalmente senza glutine, con sapore intenso e terroso. Non forma reti glutiniche autonomamente — va sempre abbinata a farine con glutine (max 20–30%) salvo ricette gluten-free appositamente formulate. Aggiunge un carattere rustico inconfondibile e colore scuro.</div>
+        <div class="flour-stats">
+          <div class="fstat"><div class="fstat-label">Glutine</div><div class="fstat-val">Assente</div></div>
+          <div class="fstat"><div class="fstat-label">Blend max</div><div class="fstat-val">20–30%</div></div>
+          <div class="fstat"><div class="fstat-label">Proteine</div><div class="fstat-val">10–13%</div></div>
+        </div>
+        <div class="flour-uses">
+          <span class="flour-use-tag">Pizza rustica scura</span><span class="flour-use-tag">Blend aromatico</span><span class="flour-use-tag">Gluten-free</span>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="flour-card" data-cat="alternativa" onclick="toggleFlour(this)">
+      <div class="flour-header">
+        <div class="flour-emoji">🌿</div>
+        <div><div class="flour-name">Farina di Kamut®</div><span class="flour-tag">Alternativa</span></div>
+        <div class="flour-arrow">▼</div>
+      </div>
+      <div class="flour-body"><div class="flour-inner">
+        <div class="flour-desc">Varietà antica di grano duro (Khorasan), marchio registrato. Chicchi grandi, colore dorato, sapore burroso e dolce. Contiene glutine ma diverso dal grano moderno — più tollerato da sensibili (non celiaci). Impasto molto estensibile, richiede meno lavorazione. Alto contenuto di selenio e proteine.</div>
+        <div class="flour-stats">
+          <div class="fstat"><div class="fstat-label">W tipico</div><div class="fstat-val">150–220</div></div>
+          <div class="fstat"><div class="fstat-label">Proteine</div><div class="fstat-val">14–17%</div></div>
+          <div class="fstat"><div class="fstat-label">Assorbim.</div><div class="fstat-val">60–70%</div></div>
+        </div>
+        <div class="flour-uses">
+          <span class="flour-use-tag">Pizza gourmet</span><span class="flour-use-tag">Pasta fresca</span><span class="flour-use-tag">Blend 30–50%</span>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="flour-card" data-cat="alternativa" onclick="toggleFlour(this)">
+      <div class="flour-header">
+        <div class="flour-emoji">🟡</div>
+        <div><div class="flour-name">Farina di Mais (Fioretto)</div><span class="flour-tag">Alternativa</span></div>
+        <div class="flour-arrow">▼</div>
+      </div>
+      <div class="flour-body"><div class="flour-inner">
+        <div class="flour-desc">Senza glutine, granulometria fine (fioretto) o media (farina bramata). Usata in piccole percentuali nella pizza per croccantezza del fondo e colore giallo vivace. Non lega da sola, va sempre in blend. Ottima anche come spolvero alternativo alla semola.</div>
+        <div class="flour-stats">
+          <div class="fstat"><div class="fstat-label">Glutine</div><div class="fstat-val">Assente</div></div>
+          <div class="fstat"><div class="fstat-label">Blend max</div><div class="fstat-val">10–15%</div></div>
+          <div class="fstat"><div class="fstat-label">Effetto</div><div class="fstat-val">Croccante</div></div>
+        </div>
+        <div class="flour-uses">
+          <span class="flour-use-tag">Spolvero</span><span class="flour-use-tag">Pizza croccante</span><span class="flour-use-tag">Blend colore</span>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="flour-card" data-cat="alternativa" onclick="toggleFlour(this)">
+      <div class="flour-header">
+        <div class="flour-emoji">🫘</div>
+        <div><div class="flour-name">Farina di Ceci / Legumi</div><span class="flour-tag">Alternativa</span></div>
+        <div class="flour-arrow">▼</div>
+      </div>
+      <div class="flour-body"><div class="flour-inner">
+        <div class="flour-desc">Alta proteina, senza glutine, sapore deciso e leggermente amaro. Usata al massimo 10–15% in blend. Aggiunge valore nutrizionale e carattere. La farinata di Genova e la cecina toscana la usano al 100%, ma per pizza è solo un'aggiunta aromatica. Attenzione: eccessi rendono l'impasto friabile.</div>
+        <div class="flour-stats">
+          <div class="fstat"><div class="fstat-label">Glutine</div><div class="fstat-val">Assente</div></div>
+          <div class="fstat"><div class="fstat-label">Proteine</div><div class="fstat-val">20–22%</div></div>
+          <div class="fstat"><div class="fstat-label">Blend max</div><div class="fstat-val">10–15%</div></div>
+        </div>
+        <div class="flour-uses">
+          <span class="flour-use-tag">Blend proteico</span><span class="flour-use-tag">Pizza vegan</span><span class="flour-use-tag">Farinata</span>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- W LEGEND -->
+    <div class="card" style="margin-top:6px">
+      <div class="card-title">Scala della Forza W</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:36px;height:10px;border-radius:5px;background:linear-gradient(90deg,#22d3ee,#84cc16,#eab308,#f97316,#ef4444);flex-shrink:0"></div>
+          <span style="font-size:11px;font-family:var(--mono);color:var(--muted)">debole → forte</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:4px">
+          <div style="background:var(--bg);border-radius:8px;padding:8px 10px;border-left:3px solid #22d3ee">
+            <div style="font-size:11px;font-family:var(--mono);color:#22d3ee;font-weight:700">W 90–150</div>
+            <div style="font-size:11px;font-family:var(--mono);color:var(--muted)">Biscotti, grissini, 2–4h liev.</div>
+          </div>
+          <div style="background:var(--bg);border-radius:8px;padding:8px 10px;border-left:3px solid #84cc16">
+            <div style="font-size:11px;font-family:var(--mono);color:#84cc16;font-weight:700">W 160–250</div>
+            <div style="font-size:11px;font-family:var(--mono);color:var(--muted)">Pizza veloce, pane, 4–8h</div>
+          </div>
+          <div style="background:var(--bg);border-radius:8px;padding:8px 10px;border-left:3px solid #eab308">
+            <div style="font-size:11px;font-family:var(--mono);color:#eab308;font-weight:700">W 260–320</div>
+            <div style="font-size:11px;font-family:var(--mono);color:var(--muted)">Pizza 12–24h, alta idrat.</div>
+          </div>
+          <div style="background:var(--bg);border-radius:8px;padding:8px 10px;border-left:3px solid #f97316">
+            <div style="font-size:11px;font-family:var(--mono);color:#f97316;font-weight:700">W 330–420</div>
+            <div style="font-size:11px;font-family:var(--mono);color:var(--muted)">Pizza 48–72h, panettone</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- INSTALL BANNER -->
+<div class="install-banner hidden" id="installBanner">
+  <div class="install-icon">🍕</div>
+  <div class="install-text">
+    <div class="install-title">Aggiungi alla Home</div>
+    <div class="install-sub">Usala come app, offline</div>
+  </div>
+  <div class="install-actions">
+    <button class="btn-install" id="installBtn">Installa</button>
+    <button class="btn-dismiss" onclick="dismissBanner()">Non ora</button>
+  </div>
+</div>
+
+<!-- ANDROID MANUAL INSTALL MODAL -->
+<div class="ios-modal" id="androidModal" onclick="if(event.target.id==='androidModal') document.getElementById('androidModal').classList.remove('open')">
+  <div class="ios-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" style="margin-bottom:18px">Installa su <span class="ot">Android</span></div>
+    <div class="ios-step">
+      <div class="ios-num">1</div>
+      <div>
+        <div class="ios-step-title">Apri il menu di Chrome</div>
+        <div class="ios-step-sub">Tocca i <strong style="color:var(--amber)">⋮ tre puntini</strong> in alto a destra nella barra del browser</div>
+      </div>
+    </div>
+    <div class="ios-step">
+      <div class="ios-num">2</div>
+      <div>
+        <div class="ios-step-title">Tocca "Aggiungi a schermata Home"</div>
+        <div class="ios-step-sub">Oppure cerca <strong style="color:var(--amber)">"Installa app"</strong> — la voce compare solo se la pagina è caricata da un server web (non da file locale)</div>
+      </div>
+    </div>
+    <div class="ios-step">
+      <div class="ios-num">3</div>
+      <div>
+        <div class="ios-step-title">Conferma e premi "Aggiungi"</div>
+        <div class="ios-step-sub">Troverai <strong style="color:var(--orange)">Pizza PRO 🍕</strong> nella schermata Home come un'app vera!</div>
+      </div>
+    </div>
+    <div style="margin-top:14px;padding:12px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);border-radius:10px;">
+      <div style="font-size:11px;font-family:var(--mono);color:#fbbf24;line-height:1.6;">
+        ⚠️ <strong>Nota:</strong> il pulsante "Installa" automatico funziona solo quando la pagina è ospitata su un server HTTPS. Se stai aprendo il file in locale, usa il menu ⋮ di Chrome manualmente.
+      </div>
+    </div>
+    <button onclick="document.getElementById('androidModal').classList.remove('open')" style="width:100%;margin-top:16px;padding:14px;background:var(--orange);color:white;border:none;border-radius:14px;font-size:15px;font-weight:700;font-family:var(--mono);cursor:pointer;">
+      Ho capito!
+    </button>
+  </div>
+</div>
+
+<!-- iOS INSTRUCTIONS MODAL -->
+<div class="ios-modal" id="iosModal" onclick="closeIOSModal(event)">
+  <div class="ios-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" style="margin-bottom:18px">Aggiungi alla <span class="ot">Home</span></div>
+    <div class="ios-step">
+      <div class="ios-num">1</div>
+      <div>
+        <div class="ios-step-title">Tocca il pulsante Condividi</div>
+        <div class="ios-step-sub">In Safari, premi l'icona <strong style="color:var(--amber)">□↑</strong> in basso al centro (o in alto a destra su iPad)</div>
+      </div>
+    </div>
+    <div class="ios-step">
+      <div class="ios-num">2</div>
+      <div>
+        <div class="ios-step-title">Scorri e tocca "Aggiungi a Home"</div>
+        <div class="ios-step-sub">Nel menu che compare, cerca <strong style="color:var(--amber)">"Aggiungi a schermata Home"</strong> con l'icona <strong>⊕</strong></div>
+      </div>
+    </div>
+    <div class="ios-step">
+      <div class="ios-num">3</div>
+      <div>
+        <div class="ios-step-title">Conferma il nome e premi "Aggiungi"</div>
+        <div class="ios-step-sub">Troverai <strong style="color:var(--orange)">Pizza PRO 🍕</strong> nella tua schermata Home, pronto ad aprirsi come un'app!</div>
+      </div>
+    </div>
+    <div class="ios-arrow">👆</div>
+    <button onclick="closeIOSModal(null)" style="width:100%;margin-top:20px;padding:14px;background:var(--orange);color:white;border:none;border-radius:14px;font-size:15px;font-weight:700;font-family:var(--mono);cursor:pointer;">
+      Ho capito!
+    </button>
+  </div>
+</div>
+
+<!-- HISTORY MODAL -->
+<div class="modal-overlay" id="historyModal" onclick="closeModal('historyModal', event)">
+  <div class="modal" style="position:relative">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('historyModal', null)">✕</button>
+    <div class="modal-title">Crono<span class="ot">logie</span></div>
+
+    <!-- Save bar -->
+    <div class="history-save-bar">
+      <input type="text" id="historySaveName" placeholder="Nome ricetta (es. Napoletana 48h)..." maxlength="40">
+      <button onclick="saveToHistory()">💾 Salva</button>
+    </div>
+
+    <div id="history-count-label" class="history-count"></div>
+    <div id="history-list-container"></div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settingsModal" onclick="closeModal('settingsModal', event)">
+  <div class="modal" style="position:relative">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('settingsModal', null)">✕</button>
+    <div class="modal-title">Impo<span class="ot">stazioni</span></div>
+
+    <div class="setting-section-title">Arrotondamento quantità</div>
+    <div class="rounding-options">
+
+      <div class="rounding-opt selected" id="ropt-ceil" onclick="setRounding('ceil')">
+        <div class="ropt-radio"></div>
+        <div class="ropt-icon">⬆️</div>
+        <div style="flex:1;min-width:0">
+          <div class="ropt-title">Per eccesso</div>
+          <div class="ropt-sub">Arrotonda sempre al grammo superiore. Non ti manca mai nulla.</div>
+        </div>
+        <div class="ropt-example">
+          <div class="ropt-ex-label">es. 324.2</div>
+          <div class="ropt-ex-val">→ 325g</div>
+        </div>
+      </div>
+
+      <div class="rounding-opt" id="ropt-round" onclick="setRounding('round')">
+        <div class="ropt-radio"></div>
+        <div class="ropt-icon">↕️</div>
+        <div style="flex:1;min-width:0">
+          <div class="ropt-title">Al più vicino</div>
+          <div class="ropt-sub">Arrotondamento classico matematico. Precisione media.</div>
+        </div>
+        <div class="ropt-example">
+          <div class="ropt-ex-label">es. 324.2</div>
+          <div class="ropt-ex-val">→ 324g</div>
+        </div>
+      </div>
+
+      <div class="rounding-opt" id="ropt-floor" onclick="setRounding('floor')">
+        <div class="ropt-radio"></div>
+        <div class="ropt-icon">⬇️</div>
+        <div style="flex:1;min-width:0">
+          <div class="ropt-title">Per difetto</div>
+          <div class="ropt-sub">Arrotonda sempre al grammo inferiore. Impasto leggermente più sodo.</div>
+        </div>
+        <div class="ropt-example">
+          <div class="ropt-ex-label">es. 324.8</div>
+          <div class="ropt-ex-val">→ 324g</div>
+        </div>
+      </div>
+
+      <div class="rounding-opt" id="ropt-precise" onclick="setRounding('precise')">
+        <div class="ropt-radio"></div>
+        <div class="ropt-icon">🔬</div>
+        <div style="flex:1;min-width:0">
+          <div class="ropt-title">Preciso (1 decimale)</div>
+          <div class="ropt-sub">Mostra il decimo di grammo. Per bilance di precisione.</div>
+        </div>
+        <div class="ropt-example">
+          <div class="ropt-ex-label">es. 324.2</div>
+          <div class="ropt-ex-val">→ 324.2g</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="setting-section-title" style="margin-top:20px">Lievito</div>
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-size:12px;font-family:var(--mono);color:var(--muted);line-height:1.6;">
+      Il lievito usa sempre <strong style="color:var(--amber)">1 decimale in più</strong> rispetto alla modalità scelta, perché quantità piccole richiedono più precisione (es. 0.6g invece di 1g).
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="faqModal" onclick="closeModal('faqModal', event)">
+  <div class="modal" style="position:relative">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('faqModal', null)">✕</button>
+    <div class="modal-title">FAQ <span class="ot">Problemi</span></div>
+    <div class="faq-item">
+      <div class="faq-q">L'impasto è troppo appiccicoso</div>
+      <div class="faq-a">Forse hai messo l'acqua troppo in fretta o la farina è debole. Fai riposare 15–20 min in ciotola, poi procedi con delle pieghe Slap & Fold.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">I panetti si ritirano quando li stendo</div>
+      <div class="faq-a">L'appretto è stato troppo corto o l'impasto è ancora freddo dal frigo. Aspetta 30–60 minuti a temperatura ambiente.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Pizza con grosse bolle bruciate (morbillo)</div>
+      <div class="faq-a">La maturazione è andata oltre. Riduci il lievito/tempi la prossima volta. Chiudi ermeticamente i panetti.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">L'impasto non è cresciuto</div>
+      <div class="faq-a">Lievito scaduto, acqua troppo calda (>35°C uccide i lieviti), o temperatura ambiente troppo bassa.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="piegheModal" onclick="closeModal('piegheModal', event)">
+  <div class="modal" style="position:relative">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('piegheModal', null)">✕</button>
+    <div class="modal-title">Guida <span class="ot">Pieghe</span></div>
+    <p style="font-size:12px;font-family:var(--mono);color:var(--muted);margin-bottom:14px;">Le pieghe sviluppano il glutine, incorporano aria e danno struttura all'impasto.</p>
+    <div class="guide-block">
+      <div class="guide-title">Slap & Fold</div>
+      <div class="guide-text">Ideale per impasti molto idratati (>70%). Si sbatte l'impasto sul banco e lo si ripiega, intrappolando aria e asciugandolo.</div>
+    </div>
+    <div class="guide-block">
+      <div class="guide-title">Pieghe a Tre (a Portafoglio)</div>
+      <div class="guide-text">Si stende a rettangolo e si piegano i lembi verso l'interno come una lettera. Danno rigidità e struttura.</div>
+    </div>
+    <div class="guide-block">
+      <div class="guide-title">Coil Folds (Pieghe in Ciotola)</div>
+      <div class="guide-text">Durante la lievitazione. Si solleva l'impasto dal centro con le mani bagnate. Non sgonfiano i gas accumulati.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="mathModal" onclick="closeModal('mathModal', event)">
+  <div class="modal" style="position:relative">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('mathModal', null)">✕</button>
+    <div class="modal-title">Formule <span class="ot">Utilizzate</span></div>
+    <div class="guide-block">
+      <div class="guide-title">Fattore 100 (Baker's Percentage)</div>
+      <div class="guide-text" style="margin-top:6px"><code>Farina = Peso / (1 + %idro + %sale + ...)</code><br><br>Ogni ingrediente è espresso come % della farina.</div>
+    </div>
+    <div class="guide-block">
+      <div class="guide-title">Curva Termica Lievitazione</div>
+      <div class="guide-text" style="margin-top:6px"><code>Fattore = 1.1 ^ (20 - Temp)</code><br><br>Ogni °C in più circa raddoppia la velocità ogni 10°.</div>
+    </div>
+    <div class="guide-block">
+      <div class="guide-title">Conversione Lieviti</div>
+      <div class="guide-text">LBS = 1/3 di LBF. Il Lievito Madre viene sottratto proporzionalmente da farina e acqua.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="aiModal" onclick="closeModal('aiModal', event)">
+  <div class="modal" style="position:relative">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal('aiModal', null)">✕</button>
+    <div class="modal-title">Chef <span class="ot">AI ✦</span></div>
+
+    <div id="ai-buttons">
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 16px;text-align:center;gap:14px;">
+        <div style="font-size:40px;filter:grayscale(1);opacity:0.4;">👨‍🍳</div>
+        <div style="font-size:15px;font-weight:700;color:var(--muted);">Chef AI non disponibile</div>
+        <div style="font-size:12px;font-family:var(--mono);color:var(--muted);line-height:1.6;max-width:260px;">Questa funzione è temporaneamente disabilitata. Tutte le altre funzioni dell'app funzionano normalmente.</div>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:11px;font-family:var(--mono);color:var(--muted);">
+          🔧 Funzione in manutenzione
+        </div>
+      </div>
+    </div>
+
+    <div id="ai-loading" class="hidden">
+      <div class="loading-pulse">
+        <div class="pulse-dots"><span></span><span></span><span></span></div>
+        <span style="margin-left:8px">Lo Chef sta studiando...</span>
+      </div>
+    </div>
+
+    <div id="ai-result" class="hidden">
+      <div class="ai-response" id="ai-text"></div>
+      <button class="ai-back" onclick="resetAI()">← Fai un'altra domanda</button>
+    </div>
+
+    <div id="ai-error" class="hidden error-box">Problema di connessione. Riprova più tardi.</div>
+  </div>
+</div>
+
+<script>
+// === STATE ===
+let formato = 'tonda';
+let metodo = 'diretto';
+let tipoLievito = 'lbf';
+let momentoStaglio = 'dopo';
+let aiState = 'idle';
+let roundingMode = localStorage.getItem('rounding') || 'ceil'; // ceil | round | floor | precise
+
+// === ROUNDING ===
+function setRounding(mode) {
+  roundingMode = mode;
+  localStorage.setItem('rounding', mode);
+  // Update UI
+  ['ceil','round','floor','precise'].forEach(m => {
+    document.getElementById('ropt-'+m).classList.toggle('selected', m === mode);
+  });
+  // Re-render recipe if visible
+  const active = document.querySelector('.panel.active');
+  if (active && active.id === 'tab-ricetta') calc();
+}
+// Init UI on load
+document.addEventListener('DOMContentLoaded', () => setRounding(roundingMode));
+const tabIds = ['formato','impasto','lievito','tempi','ricetta','farine'];
+function setTab(id) {
+  tabIds.forEach(t => {
+    document.getElementById('tab-'+t).classList.toggle('active', t === id);
+  });
+  document.querySelectorAll('.tab').forEach((el, i) => {
+    el.classList.toggle('active', tabIds[i] === id);
+  });
+  if (id === 'ricetta') calc();
+}
+
+// === FORMATO ===
+function setFormato(f) {
+  formato = f;
+  document.getElementById('tonda-fields').classList.toggle('hidden', f !== 'tonda');
+  document.getElementById('teglia-fields').classList.toggle('hidden', f !== 'teglia');
+  document.getElementById('seg-tonda').classList.toggle('active', f === 'tonda');
+  document.getElementById('seg-teglia').classList.toggle('active', f === 'teglia');
+  calc();
+}
+
+function toggleTeglia() {
+  const tipo = document.getElementById('tipoTeglia').value;
+  document.getElementById('rect-fields').classList.toggle('hidden', tipo !== 'rettangolare');
+  document.getElementById('round-fields').classList.toggle('hidden', tipo !== 'rotonda');
+}
+
+// === LIEVITO ===
+function toggleLievito() {
+  tipoLievito = document.getElementById('tipoLievito').value;
+  const isMadre = tipoLievito === 'licoli' || tipoLievito === 'solida';
+  document.getElementById('range-lbf').classList.toggle('hidden', tipoLievito !== 'lbf');
+  document.getElementById('range-lbs').classList.toggle('hidden', tipoLievito !== 'lbs');
+  document.getElementById('range-madre').classList.toggle('hidden', !isMadre);
+  document.getElementById('metodo-card').classList.toggle('hidden', isMadre);
+  calc();
+}
+
+// === METODO ===
+function setMetodo(m) {
+  metodo = m;
+  ['diretto','biga','poolish'].forEach(x => {
+    document.getElementById('met-'+x).classList.toggle('active', x === m);
+  });
+  const show = m !== 'diretto';
+  document.getElementById('pref-pct-row').classList.toggle('hidden', !show);
+  if (show) document.getElementById('prefLabel').textContent = '% ' + m.charAt(0).toUpperCase() + m.slice(1);
+  calc();
+}
+
+// === FRIGO ===
+function toggleFrigo() {
+  const ore = parseInt(document.getElementById('oreFrigo').value);
+  document.getElementById('frigo-card').classList.toggle('hidden', ore === 0);
+}
+
+function setStaglio(m) {
+  momentoStaglio = m;
+  document.getElementById('stag-prima').classList.toggle('active', m === 'prima');
+  document.getElementById('stag-dopo').classList.toggle('active', m === 'dopo');
+  calc();
+}
+
+// === CALC ENGINE ===
+function getV(id) { return parseFloat(document.getElementById(id).value); }
+
+function calc() {
+  const currentTab = document.querySelector('.panel.active')?.id;
+  if (currentTab !== 'tab-ricetta') return; // lazy calc
+
+  // Read values
+  const nPezzi = getV(formato === 'tonda' ? 'numeroPezzi' : 'numeroPezziT');
+  const pesoPanetto = getV('pesoPanetto') || 250;
+  const tegliaL = getV('tegliaL') || 40;
+  const tegliaP = getV('tegliaP') || 30;
+  const tegliaD = getV('tegliaD') || 30;
+  const tipoTeglia = document.getElementById('tipoTeglia').value;
+  const spessoreTeglia = getV('spessoreTeglia');
+  const sfrido = getV('sfrido');
+
+  const idratazione = getV('idratazione');
+  const sale = getV('sale');
+  const olio = getV('olio');
+  const zucchero = getV('zucchero');
+
+  tipoLievito = document.getElementById('tipoLievito').value;
+  const isMadre = tipoLievito === 'licoli' || tipoLievito === 'solida';
+
+  const percLievito = tipoLievito === 'lbf' ? getV('lievitoLBF')
+    : tipoLievito === 'lbs' ? getV('lievitoLBS')
+    : getV('lievitoMadre');
+
+  const temperatura = getV('temperatura');
+  const oreFrigo = getV('oreFrigo');
+  const temperaturaFrigo = getV('temperaturaFrigo') || 4;
+  const metodoReale = isMadre ? 'diretto' : metodo;
+  const percentualePrefermento = getV('percentualePrefermento') || 30;
+
+  // Calcolo peso
+  let areaTeglia = tipoTeglia === 'rettangolare' ? tegliaL * tegliaP : Math.PI * Math.pow(tegliaD / 2, 2);
+  const basePeso = formato === 'tonda' ? nPezzi * pesoPanetto : nPezzi * (areaTeglia * spessoreTeglia);
+  const pesoTotale = basePeso * (1 + sfrido / 100);
+
+  const percTot = 100 + idratazione + sale + olio + zucchero + percLievito;
+  const farina = pesoTotale / (percTot / 100);
+  const acqua = farina * idratazione / 100;
+  const qtSale = farina * sale / 100;
+  const qtOlio = farina * olio / 100;
+  const qtZucchero = farina * zucchero / 100;
+  const qtLievito = farina * percLievito / 100;
+
+  let fAdd = farina, aAdd = acqua;
+  if (tipoLievito === 'licoli') { fAdd -= qtLievito / 2; aAdd -= qtLievito / 2; }
+  else if (tipoLievito === 'solida') { fAdd -= qtLievito * 2/3; aAdd -= qtLievito * 1/3; }
+
+  let fPref = 0, aPref = 0, lPref = 0;
+  let fRinf = fAdd, aRinf = aAdd, lRinf = qtLievito;
+
+  if (!isMadre && metodoReale !== 'diretto') {
+    fPref = fAdd * percentualePrefermento / 100;
+    if (metodoReale === 'biga') { aPref = fPref * 0.44; lPref = fPref * (tipoLievito === 'lbs' ? 0.01/3 : 0.01); }
+    else if (metodoReale === 'poolish') { aPref = fPref; lPref = fPref * (tipoLievito === 'lbs' ? 0.002/3 : 0.002); }
+    fRinf = fAdd - fPref; aRinf = aAdd - aPref; lRinf = Math.max(0, qtLievito - lPref);
+  }
+
+  let stimaW = '220–250';
+  if (idratazione > 75) stimaW = '340–380';
+  else if (idratazione > 68) stimaW = '300–340';
+  else if (idratazione >= 65) stimaW = '280–300';
+
+  // Lievitazione TA
+  let eqLBF = percLievito;
+  if (tipoLievito === 'lbs') eqLBF *= 3;
+  if (tipoLievito === 'licoli') eqLBF /= 10;
+  if (tipoLievito === 'solida') eqLBF /= 15;
+
+  const baseTime = 2.4 / (eqLBF || 0.01);
+  const tempFactorFrigo = Math.pow(1.1, 20 - temperaturaFrigo);
+  const eqFrigo = oreFrigo / tempFactorFrigo;
+  const remaining = baseTime - eqFrigo;
+  let oreTA = 0, timeError = false;
+  if (remaining <= 0 && oreFrigo > 0) timeError = true;
+  else oreTA = remaining * Math.pow(1.1, 20 - temperatura);
+
+  // Render recipe — arrotondamento configurabile (impostazioni ⚙)
+  const applyRounding = (v, extraDecimals = 0) => {
+    const clamped = Math.max(0, v);
+    if (roundingMode === 'precise') {
+      const d = 1 + extraDecimals;
+      return clamped.toFixed(d);
+    }
+    if (roundingMode === 'floor') {
+      if (extraDecimals === 1) return (Math.floor(clamped * 10) / 10).toFixed(1);
+      return Math.floor(clamped).toString();
+    }
+    if (roundingMode === 'round') {
+      if (extraDecimals === 1) return (Math.round(clamped * 10) / 10).toFixed(1);
+      return Math.round(clamped).toString();
+    }
+    // default: ceil
+    if (extraDecimals === 1) return (Math.ceil(clamped * 10) / 10).toFixed(1);
+    return Math.ceil(clamped).toString();
+  };
+  // dec=1 → lievito (un decimale in più)
+  const fmt = (v, d = 0) => applyRounding(v, d);
+
+  const roundingLabels = {
+    ceil:    { icon: '⬆️', text: 'Arrotondamento per <strong>eccesso</strong> al grammo' },
+    round:   { icon: '↕️', text: 'Arrotondamento al grammo <strong>più vicino</strong>' },
+    floor:   { icon: '⬇️', text: 'Arrotondamento per <strong>difetto</strong> al grammo' },
+    precise: { icon: '🔬', text: 'Valori <strong>precisi</strong> al decimo di grammo' },
+  };
+  const rl = roundingLabels[roundingMode];
+  const ingrItem = (icon, label, val, dec = 0) => `
+    <div class="ingr">
+      <div class="ingr-icon">${icon}</div>
+      <div>
+        <div class="ingr-label">${label}</div>
+        <div class="ingr-val">${fmt(val, dec)}<span class="ingr-unit"> g</span></div>
+      </div>
+    </div>`;
+
+  let recipeHTML = `
+    <div class="recipe-card">
+      <div class="recipe-header">
+        <div class="recipe-title">Ricetta</div>
+        <div class="recipe-meta">
+          <div>Totale: <strong>${applyRounding(pesoTotale)}g</strong></div>
+          <div>Forza W: <strong>${stimaW}</strong></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);border-radius:8px;padding:7px 10px;margin-bottom:14px;">
+        <span style="font-size:13px;">${rl.icon}</span>
+        <span style="font-size:11px;font-family:var(--mono);color:#fbbf24;">${rl.text}</span>
+        <button onclick="openModal('settingsModal')" style="margin-left:auto;background:rgba(249,115,22,0.15);border:none;border-radius:6px;color:var(--orange);font-size:13px;padding:2px 7px;cursor:pointer;flex-shrink:0;">⚙</button>
+      </div>`;
+
+  if (metodoReale === 'diretto') {
+    recipeHTML += `<div class="ingredient-grid">
+      ${ingrItem('🌾', 'Farina', fAdd)}
+      ${ingrItem('💧', 'Acqua', aAdd)}
+      ${isMadre ? ingrItem('🦠', 'Madre', qtLievito) : ingrItem('🔬', 'Lievito', qtLievito, 1)}
+      ${ingrItem('🧂', 'Sale', qtSale)}
+      ${olio > 0 ? ingrItem('🫒', 'Olio', qtOlio) : ''}
+      ${zucchero > 0 ? ingrItem('🍬', 'Zucchero', qtZucchero) : ''}
+    </div>`;
+  } else {
+    recipeHTML += `
+      <div class="pref-block">
+        <div class="pref-title">${metodoReale.toUpperCase()}</div>
+        <div class="pref-grid">
+          <div class="pref-item"><div class="pref-item-label">Farina</div><div class="pref-item-val">${fmt(fPref)}g</div></div>
+          <div class="pref-item"><div class="pref-item-label">Acqua</div><div class="pref-item-val">${fmt(aPref)}g</div></div>
+          <div class="pref-item"><div class="pref-item-label">Lievito</div><div class="pref-item-val">${fmt(lPref, 1)}g</div></div>
+        </div>
+      </div>
+      <div class="pref-block" style="border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.03)">
+        <div class="pref-title" style="color: var(--muted)">RINFRESCO</div>
+        <div class="ingredient-grid">
+          ${ingrItem('🌾', 'Farina', fRinf)}
+          ${ingrItem('💧', 'Acqua', aRinf)}
+          ${ingrItem('🔬', 'Lievito', lRinf, 1)}
+          ${ingrItem('🧂', 'Sale', qtSale)}
+          ${olio > 0 ? ingrItem('🫒', 'Olio', qtOlio) : ''}
+          ${zucchero > 0 ? ingrItem('🍬', 'Zucchero', qtZucchero) : ''}
+        </div>
+      </div>`;
+  }
+
+  recipeHTML += `</div>`;
+  document.getElementById('recipe-output').innerHTML = recipeHTML;
+
+  // Timeline
+  const [hh, mm] = (document.getElementById('oraInfornata').value || '20:00').split(':').map(Number);
+  const tInfornata = new Date(); tInfornata.setHours(hh, mm, 0, 0);
+  const fmtT = d => d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+  const timeline = [];
+
+  if (!timeError) {
+    if (oreFrigo === 0) {
+      let appretto = Math.min(oreTA * 0.4, 6);
+      if (appretto < 1 && oreTA > 1) appretto = 1;
+      const tStaglio = new Date(tInfornata - appretto * 3600000);
+      const tImpasto = new Date(tStaglio - (oreTA - appretto) * 3600000);
+      timeline.push({ emoji: '🥣', label: 'Impasto',  time: fmtT(tImpasto), desc: 'Inizio' });
+      timeline.push({ emoji: '✂️', label: 'Staglio',  time: fmtT(tStaglio), desc: 'Formazione panetti' });
+      timeline.push({ emoji: '🍕', label: 'Infornata', time: fmtT(tInfornata), desc: 'Cottura' });
+    } else {
+      if (momentoStaglio === 'dopo') {
+        let appretto = Math.min(oreTA * 0.4, 6);
+        if (appretto < 1 && oreTA > 1) appretto = 1;
+        const puntataTA = oreTA - appretto;
+        const acclimatazione = puntataTA * 0.5;
+        const tStaglio  = new Date(tInfornata - appretto * 3600000);
+        const tUscita   = new Date(tStaglio   - acclimatazione * 3600000);
+        const tIngresso = new Date(tUscita    - oreFrigo * 3600000);
+        const tImpasto  = new Date(tIngresso  - (puntataTA - acclimatazione) * 3600000);
+        timeline.push({ emoji: '🥣', label: 'Impasto',          time: fmtT(tImpasto),   desc: 'Inizio' });
+        timeline.push({ emoji: '❄️', label: 'In frigo',         time: fmtT(tIngresso),  desc: `Massa a ${temperaturaFrigo}°C` });
+        timeline.push({ emoji: '🌡️', label: 'Fuori dal frigo',  time: fmtT(tUscita),    desc: 'Acclimatazione massa' });
+        timeline.push({ emoji: '✂️', label: 'Staglio',          time: fmtT(tStaglio),   desc: 'Formazione panetti' });
+        timeline.push({ emoji: '🍕', label: 'Infornata',        time: fmtT(tInfornata), desc: 'Cottura' });
+      } else {
+        const apprettoTA = oreTA * 0.6;
+        const puntataTA  = oreTA - apprettoTA;
+        const tUscita    = new Date(tInfornata - apprettoTA * 3600000);
+        const tIngresso  = new Date(tUscita    - oreFrigo * 3600000);
+        const tStaglio   = new Date(tIngresso);
+        const tImpasto   = new Date(tStaglio   - puntataTA * 3600000);
+        timeline.push({ emoji: '🥣', label: 'Impasto',          time: fmtT(tImpasto),   desc: 'Inizio' });
+        timeline.push({ emoji: '✂️', label: 'Staglio',          time: fmtT(tStaglio),   desc: 'Formazione panetti' });
+        timeline.push({ emoji: '❄️', label: 'In frigo',         time: fmtT(tIngresso),  desc: `Panetti a ${temperaturaFrigo}°C` });
+        timeline.push({ emoji: '🌡️', label: 'Fuori dal frigo',  time: fmtT(tUscita),    desc: 'Acclimatazione panetti' });
+        timeline.push({ emoji: '🍕', label: 'Infornata',        time: fmtT(tInfornata), desc: 'Cottura' });
+      }
+    }
+  }
+
+  let tlHTML = '';
+  if (timeError) {
+    tlHTML = `<div class="error-box">⚠️ Troppo lievito per le ore di frigo. Riduci il lievito o accorcia il frigo.</div>`;
+  } else {
+    tlHTML = `<div class="timeline">` + timeline.map(s => `
+      <div class="tl-step">
+        <div class="tl-dot"></div>
+        <div class="tl-time">${s.time} <span class="tl-label">${s.emoji} ${s.label}</span></div>
+        <div class="tl-desc">${s.desc}</div>
+      </div>`).join('') + `</div>
+      <div class="tl-footer">
+        <span>Tot: ${Math.round(oreTA + oreFrigo)}h</span>
+        <div>TA <span>${Math.round(oreTA)}h</span> · Frigo <span>${oreFrigo}h</span></div>
+      </div>`;
+  }
+
+  document.getElementById('timeline-output').innerHTML = tlHTML;
+
+  // Store for AI
+  window._lastCalc = { idratazione, sale, percLievito, tipoLievito, oreFrigo, temperaturaFrigo, oreTA: Math.round(oreTA), temperatura, metodo: metodoReale };
+}
+
+// === MODALS ===
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id, e) {
+  if (e && e.target.id !== id) return;
+  document.getElementById(id).classList.remove('open');
+}
+
+// === AI ===
+function resetAI() {
+  document.getElementById('ai-buttons').classList.remove('hidden');
+  document.getElementById('ai-loading').classList.add('hidden');
+  document.getElementById('ai-result').classList.add('hidden');
+  document.getElementById('ai-error').classList.add('hidden');
+}
+
+async function callAI(type) {
+  document.getElementById('ai-buttons').classList.add('hidden');
+  document.getElementById('ai-loading').classList.remove('hidden');
+
+  const c = window._lastCalc || {};
+  let prompt = '';
+
+  if (type === 'analizza') {
+    prompt = `Analizza questa ricetta per impasto pizza: Idratazione: ${c.idratazione}%, Sale: ${c.sale}%, Lievito: ${c.percLievito}% (${c.tipoLievito}). Fermentazione: ${c.oreFrigo}h in frigo a ${c.temperaturaFrigo}°C e circa ${c.oreTA}h a TA (${c.temperatura}°C). Metodo: ${c.metodo}. Dimmi se i parametri sono bilanciati, suggerisci la forza (W) ideale e segnala criticità.`;
+  } else {
+    prompt = `Suggeriscimi 3 idee gourmet, stagionali e originali per condire la mia pizza. Niente classiche. Formato: Nome, Ingredienti (emoji), motivo abbinamento.`;
+  }
+
+  const apiKey = "";
+
+  try {
+    const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        systemInstruction: { parts: [{ text: "Sei un esperto maestro pizzaiolo italiano. Rispondi in italiano, conciso e professionale. Max 150 parole." }] }
+      })
+    });
+
+    if (!resp.ok) throw new Error('API error');
+    const data = await resp.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Lo Chef è momentaneamente occupato. Riprova!';
+
+    document.getElementById('ai-text').textContent = text;
+    document.getElementById('ai-loading').classList.add('hidden');
+    document.getElementById('ai-result').classList.remove('hidden');
+  } catch {
+    document.getElementById('ai-loading').classList.add('hidden');
+    document.getElementById('ai-error').classList.remove('hidden');
+  }
+}
+
+// Auto-calc when ricetta tab is opened
+document.querySelectorAll('.tab').forEach((el, i) => {
+  el.addEventListener('click', () => {
+    if (tabIds[i] === 'ricetta') calc();
+  });
+});
+
+// === FARINE ===
+function toggleFlour(card) {
+  const isOpen = card.classList.contains('open');
+  // Close all others
+  document.querySelectorAll('.flour-card.open').forEach(c => c.classList.remove('open'));
+  if (!isOpen) card.classList.add('open');
+}
+
+function filterFarine(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.flour-card').forEach(card => {
+    const show = cat === 'tutte' || card.dataset.cat === cat;
+    card.style.display = show ? '' : 'none';
+    if (!show) card.classList.remove('open');
+  });
+}
+
+// === HISTORY ===
+const HISTORY_KEY = 'pizza-pro-history';
+
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; }
+  catch { return []; }
+}
+
+function saveHistory(arr) {
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(arr));
+}
+
+function captureCurrentState() {
+  return {
+    formato,
+    numeroPezzi:   parseInt(document.getElementById(formato === 'tonda' ? 'numeroPezzi' : 'numeroPezziT').value),
+    pesoPanetto:   parseFloat(document.getElementById('pesoPanetto').value),
+    tegliaL:       parseFloat(document.getElementById('tegliaL').value),
+    tegliaP:       parseFloat(document.getElementById('tegliaP').value),
+    tegliaD:       parseFloat(document.getElementById('tegliaD').value),
+    tipoTeglia:    document.getElementById('tipoTeglia').value,
+    spessoreTeglia:parseFloat(document.getElementById('spessoreTeglia').value),
+    sfrido:        parseFloat(document.getElementById('sfrido').value),
+    idratazione:   parseFloat(document.getElementById('idratazione').value),
+    sale:          parseFloat(document.getElementById('sale').value),
+    olio:          parseFloat(document.getElementById('olio').value),
+    zucchero:      parseFloat(document.getElementById('zucchero').value),
+    tipoLievito,
+    lievitoLBF:    parseFloat(document.getElementById('lievitoLBF').value),
+    lievitoLBS:    parseFloat(document.getElementById('lievitoLBS').value),
+    lievitoMadre:  parseFloat(document.getElementById('lievitoMadre').value),
+    metodo,
+    percentualePrefermento: parseFloat(document.getElementById('percentualePrefermento').value),
+    temperatura:   parseFloat(document.getElementById('temperatura').value),
+    oreFrigo:      parseFloat(document.getElementById('oreFrigo').value),
+    temperaturaFrigo: parseFloat(document.getElementById('temperaturaFrigo').value),
+    momentoStaglio,
+    oraInfornata:  document.getElementById('oraInfornata').value,
+  };
+}
+
+function restoreState(s) {
+  // formato
+  setFormato(s.formato);
+  const pezziId = s.formato === 'tonda' ? 'numeroPezzi' : 'numeroPezziT';
+  document.getElementById(pezziId).value = s.numeroPezzi;
+  document.getElementById('pesoPanetto').value = s.pesoPanetto;
+  document.getElementById('tegliaL').value = s.tegliaL;
+  document.getElementById('tegliaP').value = s.tegliaP;
+  document.getElementById('tegliaD').value = s.tegliaD;
+  document.getElementById('tipoTeglia').value = s.tipoTeglia;
+  document.getElementById('spessoreTeglia').value = s.spessoreTeglia;
+  document.getElementById('sfrido').value = s.sfrido;
+  document.getElementById('sfridoVal').textContent = s.sfrido + '%';
+
+  // impasto
+  document.getElementById('idratazione').value = s.idratazione;
+  document.getElementById('idratVal').textContent = s.idratazione + '%';
+  document.getElementById('sale').value = s.sale;
+  document.getElementById('saleVal').textContent = parseFloat(s.sale).toFixed(1) + '%';
+  document.getElementById('olio').value = s.olio;
+  document.getElementById('olioVal').textContent = parseFloat(s.olio).toFixed(1) + '%';
+  document.getElementById('zucchero').value = s.zucchero;
+  document.getElementById('zuccheroVal').textContent = parseFloat(s.zucchero).toFixed(1) + '%';
+
+  // lievito
+  document.getElementById('tipoLievito').value = s.tipoLievito;
+  toggleLievito();
+  document.getElementById('lievitoLBF').value = s.lievitoLBF;
+  document.getElementById('lievitoLBFVal').textContent = parseFloat(s.lievitoLBF).toFixed(2) + '%';
+  document.getElementById('lievitoLBS').value = s.lievitoLBS;
+  document.getElementById('lievitoLBSVal').textContent = parseFloat(s.lievitoLBS).toFixed(2) + '%';
+  document.getElementById('lievitoMadre').value = s.lievitoMadre;
+  document.getElementById('lievitoMadreVal').textContent = s.lievitoMadre + '%';
+  setMetodo(s.metodo);
+  document.getElementById('percentualePrefermento').value = s.percentualePrefermento;
+  document.getElementById('prefPctVal').textContent = s.percentualePrefermento + '%';
+
+  // tempi
+  document.getElementById('temperatura').value = s.temperatura;
+  document.getElementById('tempVal').textContent = s.temperatura + '°C';
+  document.getElementById('oreFrigo').value = s.oreFrigo;
+  document.getElementById('frigoVal').textContent = s.oreFrigo + 'h';
+  toggleFrigo();
+  document.getElementById('temperaturaFrigo').value = s.temperaturaFrigo;
+  document.getElementById('tempFrigoVal').textContent = s.temperaturaFrigo + '°C';
+  setStaglio(s.momentoStaglio);
+  document.getElementById('oraInfornata').value = s.oraInfornata;
+}
+
+function saveToHistory() {
+  const name = document.getElementById('historySaveName').value.trim();
+  if (!name) {
+    document.getElementById('historySaveName').focus();
+    document.getElementById('historySaveName').style.borderColor = '#f87171';
+    setTimeout(() => document.getElementById('historySaveName').style.borderColor = '', 1200);
+    return;
+  }
+  const state = captureCurrentState();
+  const isMadre = state.tipoLievito === 'licoli' || state.tipoLievito === 'solida';
+  const percLievito = state.tipoLievito === 'lbf' ? state.lievitoLBF
+    : state.tipoLievito === 'lbs' ? state.lievitoLBS : state.lievitoMadre;
+
+  const entry = {
+    id: Date.now(),
+    name,
+    date: new Date().toLocaleDateString('it-IT', { day:'2-digit', month:'2-digit', year:'2-digit', hour:'2-digit', minute:'2-digit' }),
+    tags: [
+      state.idratazione + '% idrat.',
+      percLievito + '% liev.',
+      state.oreFrigo > 0 ? state.oreFrigo + 'h frigo' : 'solo TA',
+      state.tipoLievito.toUpperCase(),
+      state.formato,
+    ],
+    state
+  };
+  const history = getHistory();
+  history.unshift(entry);
+  if (history.length > 20) history.pop(); // max 20 ricette
+  saveHistory(history);
+  document.getElementById('historySaveName').value = '';
+  renderHistoryList();
+
+  // Feedback visivo
+  const btn = document.querySelector('.history-save-bar button');
+  const orig = btn.textContent;
+  btn.textContent = '✅ Salvata!';
+  btn.style.background = '#22c55e';
+  setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 1800);
+}
+
+function loadFromHistory(id) {
+  const entry = getHistory().find(e => e.id === id);
+  if (!entry) return;
+  restoreState(entry.state);
+  closeModal('historyModal', null);
+  setTab('ricetta');
+}
+
+function deleteFromHistory(id) {
+  const history = getHistory().filter(e => e.id !== id);
+  saveHistory(history);
+  renderHistoryList();
+}
+
+function renderHistoryList() {
+  const history = getHistory();
+  const container = document.getElementById('history-list-container');
+  const countEl = document.getElementById('history-count-label');
+
+  countEl.innerHTML = history.length > 0
+    ? `<span>${history.length}</span> ricett${history.length === 1 ? 'a salvata' : 'e salvate'} (max 20)`
+    : '';
+
+  if (history.length === 0) {
+    container.innerHTML = `
+      <div class="history-empty">
+        <div class="he-icon">📋</div>
+        <div>Nessuna ricetta salvata</div>
+        <div style="margin-top:6px;font-size:11px;opacity:0.7;">Dai un nome alla ricetta attuale e premi 💾 Salva</div>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = `<div class="history-list">` + history.map(e => `
+    <div class="history-item">
+      <div class="hi-top">
+        <div class="hi-name">${e.name}</div>
+        <div class="hi-date">${e.date}</div>
+      </div>
+      <div class="hi-tags">
+        ${e.tags.map(t => `<span class="hi-tag">${t}</span>`).join('')}
+      </div>
+      <div class="hi-actions">
+        <button class="hi-btn load" onclick="loadFromHistory(${e.id})">⬆️ Carica</button>
+        <button class="hi-btn del"  onclick="deleteFromHistory(${e.id})">🗑 Elimina</button>
+      </div>
+    </div>`).join('') + `</div>`;
+}
+
+function openHistoryModal() {
+  renderHistoryList();
+  openModal('historyModal');
+}
+
+// === PWA INSTALL ===
+let deferredPrompt = null;
+const banner = document.getElementById('installBanner');
+const installBtn = document.getElementById('installBtn');
+const dismissed = localStorage.getItem('pwa-dismissed');
+
+function isIOS() {
+  return /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+}
+
+function isInStandaloneMode() {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+
+if (!isInStandaloneMode() && !dismissed) {
+  if (isIOS()) {
+    // iOS Safari: mostra istruzioni manuali
+    setTimeout(() => {
+      banner.classList.remove('hidden');
+      installBtn.textContent = 'Come fare';
+    }, 2000);
+    installBtn.addEventListener('click', () => {
+      dismissBanner(false);
+      document.getElementById('iosModal').classList.add('open');
+    });
+  } else {
+    // Android/Chrome: cattura beforeinstallprompt
+    let promptFired = false;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      promptFired = true;
+      setTimeout(() => banner.classList.remove('hidden'), 1500);
+    });
+    // Listener sul bottone registrato UNA SOLA VOLTA qui fuori
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        dismissBanner(true);
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
+      } else {
+        // Fallback: istruzioni manuali per Android
+        dismissBanner(false);
+        document.getElementById('androidModal').classList.add('open');
+      }
+    });
+    window.addEventListener('appinstalled', () => {
+      deferredPrompt = null;
+      dismissBanner(true);
+    });
+    // Fallback: se dopo 5s il prompt non è arrivato, mostriamo comunque il banner
+    // con istruzioni manuali (file://, già installata, browser non supportato, ecc.)
+    setTimeout(() => {
+      if (!promptFired && !isInStandaloneMode() && !localStorage.getItem('pwa-dismissed')) {
+        installBtn.textContent = 'Come fare';
+        banner.classList.remove('hidden');
+      }
+    }, 5000);
+  }
+}
+
+function dismissBanner(permanent) {
+  banner.classList.add('hiding');
+  setTimeout(() => banner.classList.add('hidden'), 320);
+  if (permanent) localStorage.setItem('pwa-dismissed', '1');
+}
+
+function closeIOSModal(e) {
+  if (e && e.target.id !== 'iosModal') return;
+  document.getElementById('iosModal').classList.remove('open');
+}
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./service-worker.js')
+    .then(reg => {
+      // Controlla aggiornamenti ogni volta che l'app viene aperta
+      reg.update();
+      reg.addEventListener('updatefound', () => {
+        const newWorker = reg.installing;
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            // Nuova versione disponibile — attivala subito
+            newWorker.postMessage({ type: 'SKIP_WAITING' });
+          }
+        });
+      });
+    })
+    .catch(err => console.warn('SW registration failed:', err));
+}
+</script>
+</body>
+</html>
